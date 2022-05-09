@@ -18,17 +18,23 @@ const float VIN_REFERENCIA = 4.569;
 float voltajeBateria;
 float corrienteDescarga;
 
-// Variables de tiempo
+// CONSTANTES PARA DIVISORES DE VOLTAJE
+float DIVISOR_VOLTAJE_VOLTAJE = 4.324287653;
+float DIVISOR_VOLTAJE_CORRIENTE = 1;
+
+// VARIABLES DE TIEMPO
 int segundos, minutos, horas;
 int inicioDescarga = 0, finDescarga, ultimoSegundoRegistrado;
 int segundosDescargando;
 
-// Configuracion de pines para pantalla LCD
+// CONFIGURACION DE PINES PARA PANTALLA LCD
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
 
 void setup() {
+  // Iniciar comunicacion serial
   Serial.begin(9600);
+  
   // Configuracion de pantalla LCD
   lcd.begin(16, 2);
 
@@ -58,6 +64,10 @@ void loop() {
   // Lectura de tensiones
   voltajeBateria    = leerVoltajeEnPin(A1, true);
   corrienteDescarga = leerVoltajeEnPin(A0, false);
+
+  // Aplicar divisores de voltaje
+  voltajeBateria    = voltajeBateria * DIVISOR_VOLTAJE_VOLTAJE;
+  corrienteDescarga = corrienteDescarga * DIVISOR_VOLTAJE_CORRIENTE;
    
   Serial.print(" v: ");
   Serial.print(voltajeBateria, 3);
