@@ -42,16 +42,14 @@ void setup() {
   pinMode(PIN_RELAY,  OUTPUT);
   pinMode(PIN_CURRENT_CONTROL, OUTPUT);
 
-
   // Ajustar el contraste de pantalla LCD
   analogWrite(PIN_CONTRASTE, 120);
-
 
   // Definir el texto de inicio en la pantalla LCD
   lcd.print("Battery");
   lcd.setCursor(0, 1);
-  lcd.print("Discharger");
-  delay(2500);
+  lcd.print("Discharger...");
+  delay(1000);
 }
 
 void loop() {
@@ -63,7 +61,7 @@ void loop() {
 
   // Lectura de tensiones
   voltajeBateria    = leerVoltajeEnPin(A1, true);
-  corrienteDescarga = leerVoltajeEnPin(A0, false);
+  corrienteDescarga = leerVoltajeEnPin(A0, true);
 
   // Aplicar divisores de voltaje
   voltajeBateria    = voltajeBateria * DIVISOR_VOLTAJE_VOLTAJE;
@@ -73,7 +71,7 @@ void loop() {
   Serial.print(voltajeBateria, 3);
   Serial.print(" I: ");
   Serial.println(corrienteDescarga, 3);
-  if (!finalizado && segundosTranscurridos > 5 && voltajeBateria >= MINIMO_VOLTAJE_BATERIA) {
+  if (!finalizado && segundosTranscurridos > 2 && voltajeBateria >= MINIMO_VOLTAJE_BATERIA) {
     if (ultimoSegundoRegistrado != segundosTranscurridos) {
       // Utilizado para no registrar mas de una vez la descarga por segundo (Evita errores si el loop se repite varias veces por segundo)
       ultimoSegundoRegistrado = segundosTranscurridos;
@@ -114,7 +112,7 @@ void loop() {
   lcd.print(" I:");
   lcd.print(corrienteDescarga, 3);
   lcd.setCursor(0, 1);
-  lcd.print("L:");
+  lcd.print("C:");
   lcd.print(corrienteDescargada, 3);
   lcd.print(" T:");
   lcd.print(horas);
